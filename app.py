@@ -1,5 +1,6 @@
 import requests
 import json
+import config 
 
 from flask import Flask, render_template, request, redirect
 from flask_restplus import Api, Resource, fields
@@ -13,7 +14,6 @@ weathers = []
 # TODO: POST to a database, display that database in html
 # @app.route("/home")
 # def index():
-#     # weather_data = request.form['/weather']
 #     return render_template('index.html')
 
 # @app.route('/postweathers', methods=["GET", "POST"])
@@ -27,15 +27,27 @@ weathers = []
 #         params=payload)
 #     return render_template('index.html', response=response.json())
 
-@api.route('/weather')
+# @app.route('/postweathers', methods=["GET", "POST"])
+# def weather():
+#     a_weather = request.form["location"]
+#     weathers.append(a_weather)
+#     return render_template('index.html', response=weathers)
+
+
+
+@api.route('/weather', methods=["GET", "POST"])
 class Weather(Resource):
     def get(self):
         return weathers
 
-    @api.expect(a_weather)
     def post(self):
-        weathers.append(api.payload)
-        return {' result' : 'weather added'}, 201
+        a_weather = request.form["location"]
+        weathers.append(a_weather)
+        return render_template('index.html', response=json.dumps(weathers))
+
+    @app.route("/home")
+    def index():
+        return render_template('index.html')
 
 
 if __name__ == '__main__':
